@@ -1,26 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const DayView = ({ dayCount }) => {
+	if (!dayCount) return null
+
+	return (
+		<div>number of working days: {dayCount}</div>
+	)
 }
 
-export default App;
+const App = () => {
+	const [ dayCount, setDayCount ] = useState(null)
+	const [ fromDate, setFromDate ] = useState(null)
+	const [ toDate, setToDate ] = useState(null)
+
+	const handleFromDateChange = event => setFromDate(new Date(event.target.value))
+	const handleToDateChange = event => setToDate(new Date(event.target.value))
+
+	const handleCalculate = () => {
+		if (fromDate && toDate) {
+			let workDayCount = 0
+			let currentDate = new Date(fromDate)
+
+			while (currentDate <= toDate) {
+				if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6)
+					workDayCount++
+				
+				currentDate.setDate(currentDate.getDate() + 1)
+			}
+
+			setDayCount(workDayCount)
+		}
+		else 
+			console.log(':(')
+	}
+	
+	return (
+		<div className="App">
+			<div>
+				<p>get number working of days between <br />
+				<input type="date" onChange={handleFromDateChange} /></p>
+				<p>and <br />
+				<input type="date" onChange={handleToDateChange} /></p>
+				<button onClick={handleCalculate}>calculate</button>
+				<DayView dayCount={dayCount} />
+			</div>
+		</div>
+	)
+}
+
+export default App
