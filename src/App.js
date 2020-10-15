@@ -13,16 +13,20 @@ const App = () => {
 	const [ dayCount, setDayCount ] = useState(null)
 	const [ fromDate, setFromDate ] = useState(null)
 	const [ toDate, setToDate ] = useState(null)
+	const [ state, setState ] = useState('vic')
 	const [ publicHolidays, setPublicHolidays ] = useState([])
 
+	// call the holiday service
 	useEffect(() => {
 		holidayService
 			.get()
 			.then(returnedHolidays => setPublicHolidays(returnedHolidays))
 	}, [])
 
+	// form input handlers
 	const handleFromDateChange = event => setFromDate(new Date(event.target.value))
 	const handleToDateChange = event => setToDate(new Date(event.target.value))
+	const handleStateChange = event => setState(event.target.value)
 
 	const handleCalculate = state => {
 		if (fromDate && toDate) {
@@ -30,8 +34,6 @@ const App = () => {
 			const filteredHolidays = publicHolidays.filter(holiday => holiday.jurisdiction === state)
 			let workDayCount = 0
 			let currentDate = new Date(fromDate)
-
-			// console.log(filteredHolidays.map(holiday => holiday.date.getTime()).includes(currentDate.getTime()))
 
 			while (currentDate <= toDate) {
 				if (
@@ -50,6 +52,7 @@ const App = () => {
 			console.log(':(')
 	}
 	
+	// render to screen
 	return (
 		<div className="App">
 			<div>
@@ -58,7 +61,19 @@ const App = () => {
 				<input type="date" onChange={handleFromDateChange} /></p>
 				<p>and <br />
 				<input type="date" onChange={handleToDateChange} /></p>
-				<button onClick={() => handleCalculate("vic")}>calculate</button>
+				<p>
+					<select value={state} onChange={handleStateChange}>
+						<option value="act">Australian Capital Territory</option>
+						<option value="nsw">New South Wales</option>
+						<option value="nt">Northern Territory</option>
+						<option value="qld">Queensland</option>
+						<option value="sa">South Australia</option>
+						<option value="tas">Tasmania</option>
+						<option value="vic">Victoria</option>
+						<option value="wa">Western Australia</option>
+					</select>
+				</p>
+				<button onClick={() => handleCalculate(state)}>calculate</button>
 				<DayView dayCount={dayCount} />
 			</div>
 		</div>
