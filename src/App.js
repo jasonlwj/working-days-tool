@@ -26,7 +26,6 @@ const App = () => {
 		event.preventDefault()
 
 		if (fromDate && toDate) {
-			console.log(':)')
 			const filteredHolidays = publicHolidays.filter(holiday => holiday.jurisdiction === state)
 			let workDayCount = 0
 			let currentDate = new Date(fromDate)
@@ -45,7 +44,7 @@ const App = () => {
 			setDayCount(workDayCount)
 		}
 		else 
-			console.log(':(')
+			alert('Please select a value for both dates')
 	}
 	
 	// render to screen
