@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import DateForm from './components/DateForm'
+import Result from './components/Result'
 import holidayService from './services/holidays'
-
-const DayView = ({ dayCount }) => {
-	if (dayCount === null) return null
-
-	return (
-		<div>number of working days: {dayCount}</div>
-	)
-}
 
 const App = () => {
 	const [ dayCount, setDayCount ] = useState(null)
@@ -28,7 +22,9 @@ const App = () => {
 	const handleToDateChange = event => setToDate(new Date(event.target.value))
 	const handleStateChange = event => setState(event.target.value)
 
-	const handleCalculate = state => {
+	const handleCalculate = event => {
+		event.preventDefault()
+
 		if (fromDate && toDate) {
 			console.log(':)')
 			const filteredHolidays = publicHolidays.filter(holiday => holiday.jurisdiction === state)
@@ -57,24 +53,14 @@ const App = () => {
 		<div className="App">
 			<div>
 				<i>note: works for 2021, australia vic</i>
-				<p>get number working of days between <br />
-				<input type="date" onChange={handleFromDateChange} /></p>
-				<p>and <br />
-				<input type="date" onChange={handleToDateChange} /></p>
-				<p>
-					<select value={state} onChange={handleStateChange}>
-						<option value="act">Australian Capital Territory</option>
-						<option value="nsw">New South Wales</option>
-						<option value="nt">Northern Territory</option>
-						<option value="qld">Queensland</option>
-						<option value="sa">South Australia</option>
-						<option value="tas">Tasmania</option>
-						<option value="vic">Victoria</option>
-						<option value="wa">Western Australia</option>
-					</select>
-				</p>
-				<button onClick={() => handleCalculate(state)}>calculate</button>
-				<DayView dayCount={dayCount} />
+				<DateForm 
+					handleCalculate={handleCalculate} 
+					handleFromDateChange={handleFromDateChange} 
+					handleToDateChange={handleToDateChange} 
+					state={state} 
+					handleStateChange={handleStateChange} 
+				/>
+				<Result dayCount={dayCount} />
 			</div>
 		</div>
 	)
